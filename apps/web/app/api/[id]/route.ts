@@ -2,19 +2,19 @@
 import { getDb, todos } from "@repo/db";
 import { eq } from 'drizzle-orm'
 import { NextResponse } from "next/server";
-
-
+import { NextRequest } from "next/server";
+//import { RouteContext } from "next/server";
 const db = getDb();
 
 
-
 export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context : { params: Promise< { id: string } > }
 ) {
   try {
     const body = await req.json();
-    const id=Number(params.id);
+    const params = await context.params;
+    const id = Number(params.id);
 
     const updateData: {
       text?: string;
@@ -31,7 +31,7 @@ export async function PATCH(
     const [todo] = await db
       .update(todos)
       .set(updateData)
-      .where(eq(todos.id,id))
+      .where(eq(todos.id, id))
       .returning();
 
     if (!todo) {
@@ -54,9 +54,10 @@ export async function PATCH(
   }
 }
 
-export async function PUT(req:Request,{params}:{params:{id:string}}){
+export async function PUT(req:NextRequest,  context : { params: Promise< { id: string } >}){
     try {
         const body=await req.json();
+        const params = await context.params;
         const id=Number(params.id);
        const updateData: {
     text?: string
@@ -88,8 +89,9 @@ export async function PUT(req:Request,{params}:{params:{id:string}}){
         }
 
 
-export async function DELETE(req:Request,{params}:{params:{id:string}}){
+export async function DELETE(req:NextRequest, context : { params: Promise< { id: string } >}){
     try{
+        const params = await context.params;
         const id=Number(params.id);
         const result=await db.delete(todos).where(eq(todos.id,id));
         if (result.rowCount===0){
