@@ -3,7 +3,7 @@ import { getDb, todos } from "@repo/db";
 import { eq } from 'drizzle-orm'
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-//import { RouteContext } from "next/server";
+
 const db = getDb();
 
 

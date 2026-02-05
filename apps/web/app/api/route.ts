@@ -2,6 +2,7 @@
 import { getDb, todos } from "@repo/db";
 import { NextResponse } from "next/server";
 
+import { NextRequest } from "next/server";
 
 const db = getDb();
 
@@ -11,7 +12,7 @@ export async function GET() {
 }
 
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     const body= await req.json()
 
     const [todo] = await db
